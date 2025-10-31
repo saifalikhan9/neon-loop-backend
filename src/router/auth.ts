@@ -9,7 +9,7 @@ import {
 import { refreshTokenMiddleware } from "../middlewares/auth";
 const router = Router();
 
-router.post("/signUp", signUP_Controller);
+router.post("/signup", signUP_Controller);
 router.post("/login", loginController);
 
 router.get("/me", refreshTokenMiddleware, getMeController);

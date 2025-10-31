@@ -45,6 +45,7 @@ connectDB()
 app.use(
   (err: ApiErrorType, req: Request, res: Response, next: NextFunction) => {
     const statusCode = err.statusCode || 500;
+    console.log(err,"global")
 
     res.status(statusCode).json({
       error: {

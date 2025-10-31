@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import ApiErrorRes from "../utills/ApiErrorResponse";
-import User from "../models/UserSchema";
+
 import { generateToken } from "../utills/generateToken";
 import { constants } from "../utills/constants";
 import { CustomRequest } from "../middlewares/auth";
+import User from "../database/models/UserSchema";
 export interface ApiErrorType extends Error {
   statusCode: number;
   success: boolean;
@@ -17,9 +18,7 @@ export async function signUP_Controller(req: Request, res: Response) {
     email,
     name,
     password,
-    phone,
-  }: { email: string; name: string; password: string; phone: string } =
-    req.body;
+  }: { email: string; name: string; password: string } = req.body;
   if (!email || !password || !name) {
     throw new ApiErrorRes(400, "please check the payload");
   }
@@ -27,8 +26,12 @@ export async function signUP_Controller(req: Request, res: Response) {
   if (exhistingUser) {
     throw new ApiErrorRes(409, "user is already registed with this email");
   }
+  
   const newUser = await User.create({ email, name, password });
-  res.json({ user: newUser, message: "user is created succesfully" });
+
+  res
+    .json({ user: newUser, message: "user is created succesfully" })
+    .status(200);
 }
 
 export async function loginController(req: Request, res: Response) {
@@ -40,14 +43,11 @@ export async function loginController(req: Request, res: Response) {
 
   const user = await User.findOne({ email }).select("+password");
   if (!user) {
-    throw new ApiErrorRes(
-      401,
-      "Incorrect email or User is not registered with this email"
-    );
+    throw new ApiErrorRes(404, "user not found with this email and password");
   }
 
   if (!(await user.correctPassword(password))) {
-    throw new ApiErrorRes(401, "Incorrect Password");
+    throw new ApiErrorRes(400, "Incorrect Password");
   }
 
   const refreshToken = generateToken(
@@ -85,11 +85,13 @@ export async function loginController(req: Request, res: Response) {
     path: "/",
   });
 
-  res.json({
-    user: userObj,
-    message: "User LoggedIN Successfully",
-    token: accessToken,
-  });
+  res
+    .json({
+      user: userObj,
+      message: "User LoggedIN Successfully",
+      token: accessToken,
+    })
+    .status(200);
 }
 
 export async function getMeController(req: CustomRequest, res: Response) {

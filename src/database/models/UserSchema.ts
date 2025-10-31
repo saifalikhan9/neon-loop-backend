@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 import bcrypt from "bcrypt";
-import ApiErrorRes from "../utills/ApiErrorResponse";
+import ApiErrorRes from "../../utills/ApiErrorResponse";
 
 // 1. Create an interface representing a document in MongoDB.
 export interface IUser extends Document {
@@ -38,16 +38,30 @@ const userSchema: Schema = new Schema(
   { timestamps: true }
 );
 
+// ✅ ADD THIS: Hash password before saving
+userSchema.pre("save", async function (next) {
+  // Only hash if password is modified (or new)
+  if (!this.isModified("password")) {
+    return next();
+  }
+
+  try {
+    // Hash the password with cost of 12
+    this.password = await bcrypt.hash(this.password as string, 12);
+    next();
+  } catch (error) {
+    next(error as Error);
+  }
+});
+
 // 3. Add your instance method.
-// Use the refined version that uses `this`.
-// IMPORTANT: Do NOT use an arrow function here, or `this` will be incorrect.
 userSchema.methods.correctPassword = async function (
   candidatePassword: string
 ): Promise<boolean> {
   try {
     return await bcrypt.compare(candidatePassword, this.password);
   } catch (error) {
-    throw new ApiErrorRes(400, "password not matched ",error as any);
+    throw new ApiErrorRes(400, "Password verification failed", error as any);
   }
 };
 

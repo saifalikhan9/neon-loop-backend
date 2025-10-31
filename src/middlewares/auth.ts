@@ -1,7 +1,7 @@
 // middleware/authMiddleware.ts
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
-import User, { IUser } from "../models/UserSchema";
+import User, { IUser } from "../database/models/UserSchema";
 import ApiErrorRes from "../utills/ApiErrorResponse";
 import { constants } from "../utills/constants";
 
@@ -65,6 +65,7 @@ export const authMiddleware = async (
     req.user = currentUser;
     next();
   } catch (error) {
+    console.log(error)
     // Handle JWT errors
     if (error instanceof jwt.JsonWebTokenError) {
       return next(new ApiErrorRes(401, "Invalid token. Please log in again."));
