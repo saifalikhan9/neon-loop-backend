@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 import bcrypt from "bcrypt";
-import ApiErrorRes from "../../utills/ApiErrorResponse";
+import ApiErrorRes from "../../utils/ApiErrorResponse";
 
 // 1. Create an interface representing a document in MongoDB.
 export interface IUser extends Document {

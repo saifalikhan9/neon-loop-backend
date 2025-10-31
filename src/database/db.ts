@@ -1,4 +1,4 @@
-import { constants } from "../utills/constants";
+import { constants } from "../utils/constants";
 import mongoose from "mongoose";
 
 const connectDB = async () => {

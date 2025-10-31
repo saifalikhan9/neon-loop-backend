@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import ApiErrorRes from "../utills/ApiErrorResponse";
+import ApiErrorRes from "../utils/ApiErrorResponse";
 
-import { generateToken } from "../utills/generateToken";
-import { constants } from "../utills/constants";
+import { generateToken } from "../utils/generateToken";
+import { constants } from "../utils/constants";
 import { CustomRequest } from "../middlewares/auth";
 import User from "../database/models/UserSchema";
 export interface ApiErrorType extends Error {
@@ -26,7 +26,7 @@ export async function signUP_Controller(req: Request, res: Response) {
   if (exhistingUser) {
     throw new ApiErrorRes(409, "user is already registed with this email");
   }
-  
+
   const newUser = await User.create({ email, name, password });
 
   res

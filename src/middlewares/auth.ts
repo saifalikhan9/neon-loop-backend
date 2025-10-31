@@ -2,8 +2,8 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 import User, { IUser } from "../database/models/UserSchema";
-import ApiErrorRes from "../utills/ApiErrorResponse";
-import { constants } from "../utills/constants";
+import ApiErrorRes from "../utils/ApiErrorResponse";
+import { constants } from "../utils/constants";
 
 interface JwtPayload {
   id: string;
@@ -42,10 +42,7 @@ export const authMiddleware = async (
     }
 
     // Verify accessToken
-    const decoded = jwt.verify(
-      token,
-      constants.access_Token_Key
-    ) as JwtPayload;
+    const decoded = jwt.verify(token, constants.access_Token_Key) as JwtPayload;
 
     // Check if user still exists
     const currentUser = await User.findById(decoded.id).select("-password");
@@ -59,13 +56,11 @@ export const authMiddleware = async (
       );
     }
 
-   
-
     // Attach user to request
     req.user = currentUser;
     next();
   } catch (error) {
-    console.log(error)
+    console.log(error);
     // Handle JWT errors
     if (error instanceof jwt.JsonWebTokenError) {
       return next(new ApiErrorRes(401, "Invalid token. Please log in again."));
@@ -99,9 +94,7 @@ export const restrictTo = (...roles: string[]) => {
   };
 };
 
-
 // middleware/refreshTokenMiddleware.ts
-
 
 export const refreshTokenMiddleware = async (
   req: CustomRequest,
@@ -128,7 +121,10 @@ export const refreshTokenMiddleware = async (
     if (!currentUser) {
       // ✅ Use 403 instead of 401
       return next(
-        new ApiErrorRes(403, "The user belonging to this token no longer exists.")
+        new ApiErrorRes(
+          403,
+          "The user belonging to this token no longer exists."
+        )
       );
     }
 

@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import { CustomRequest } from "../middlewares/auth";
-import ApiErrorRes from "../utills/ApiErrorResponse";
+import ApiErrorRes from "../utils/ApiErrorResponse";
 import { Order } from "../database/models/OrdersSchema";
-
 
 interface CartItem {
   id: string;

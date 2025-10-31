@@ -1,11 +1,11 @@
 import { Response } from "express";
 import { CustomRequest } from "../middlewares/auth";
-import { razorpay } from "../utills/razorpay";
+import { razorpay } from "../utils/razorpay";
 import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils";
-import { constants } from "../utills/constants";
-import ApiErrorRes from "../utills/ApiErrorResponse";
+import { constants } from "../utils/constants";
+import ApiErrorRes from "../utils/ApiErrorResponse";
 import { Order } from "../database/models/OrdersSchema";
-import { getNeonSignPrice, PRICING } from "../utills/getPrice";
+import { getNeonSignPrice, PRICING } from "../utils/getPrice";
 import { CartItem, ShippingData } from "../types/OrderTypes";
 
 export const createRazorpayOrder = async (
