@@ -83,7 +83,6 @@ export async function loginController(req: Request, res: Response) {
   secure: true,                     // MUST be true in production (HTTPS)
   sameSite: "none",                 // allow cross-site requests
   path: "/",
-  domain: ".vercel.app",            // allow both subdomains
 });
 
   res
